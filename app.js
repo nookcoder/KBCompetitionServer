@@ -4,8 +4,9 @@ const fs = require('fs');
 const merchantRouter = require('./routes/merchant2');
 const productRouter = require('./routes/product');
 const personalRouter = require('./routes/personal');
+const pickUpRouter = require('./routes/pickUp');
 
-const { sequelize } = require('./models');
+const { sequelize, PickUp } = require('./models');
 
 const app = express();
 
@@ -19,12 +20,13 @@ sequelize.sync({ force: false })
         console.log(err);
     });
 
-app.use(express.json());
+app.use(express.json({ limit: 50000000 }));
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/merchant', merchantRouter);
 app.use('/product', productRouter);
 app.use('/personal', personalRouter);
+app.use('/pickUp',pickUpRouter);
 
 app.get('/daum', (req, res, next) => {
     res.writeHead(200, { 'Content-Type': 'text/html' });

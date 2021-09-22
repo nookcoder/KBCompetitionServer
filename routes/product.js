@@ -1,41 +1,57 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const { Product } = require('../models');
+const bodyParser = require('body-parser');
+
+const { Merchant, Product } = require('../models');
 
 const router = express.Router();
 // 단위 5MB
 const upload = multer({
     storage: multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, 'uploads/');
+        destination: (req, file, done) => {
+            done(null, __dirname + '/uploads/');
         },
-        filename: function (req, file, cb) {
-            cb(null, new Date().valueOf + path.extname(file.originalname));
-        }
+        filename: (req, file, done) => {
+            const ext = path.extname(file.originalname);
+            done(null, path.basename(file.originalname, ext) + ext);
+        },
     }),
-    limits: { fileSize: 5 * 1024 * 1024 },
+    limits: { fileSize: 100 * 1024 * 1024 },
+});
 
+router.post('/img', upload.single('uploads'), (req, res) => {
+    console.log("이미지 업로드");
+    console.log(req.file);
+    res.json({
+        "code": 200,
+    });
 });
 
 // 폼데이터 속성명이 img 이거나 폼태크
-router.post('/register', upload.array('img', 5), async (req, res, next) => {
+router.post('/register', async (req, res, next) => {
     try {
+        const merchant = await Merchant.findOne({
+            where: {
+                id: req.body.userId,
+            }
+        });
+
         const product = await Product.create({
             userId: req.body.userId,
             name: req.body.name,
             category: req.body.category,
-            stock: req.body.stock,
             price: req.body.price,
             dateYear: req.body.dateYear,
             dateMonth: req.body.dateMonth,
             dateDay: req.body.dateDay,
             dateType: req.body.dateType,
             origin: req.body.origin,
-            details: req.body.details
+            details: req.body.details,
+            town: merchant.town2,
+            location: merchant.location
         });
-        console.log(req, files);
-        console.log(product);
+
     } catch (err) {
         console.log(err);
     }
@@ -47,7 +63,6 @@ router.post('/update', async (req, res, next) => {
         const updatedProduct = await Product.update({
             name: req.body.name,
             category: req.body.category,
-            stock: req.body.stock,
             price: req.body.price,
             dateYear: req.body.dateYear,
             dateMonth: req.body.dateMonth,
@@ -62,7 +77,6 @@ router.post('/update', async (req, res, next) => {
             }
         });
 
-        console.log(updatedProduct);
         res.json({
             "code": 200,
             "message": "변경 완료",

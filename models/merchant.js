@@ -44,7 +44,7 @@ module.exports = class Merchant extends Sequelize.Model {
                 type: Sequelize.STRING(45),
                 allowNull: false
             },
-            town1: {
+            town2: {
                 type: Sequelize.STRING(45),
                 allowNull: false
             }

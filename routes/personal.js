@@ -1,5 +1,5 @@
 const express = require('express');
-const { Personal } = require('../models');
+const { Merchant, Personal, Product } = require('../models');
 
 const router = express.Router();
 
@@ -55,7 +55,32 @@ router.post('/register', (req, res, next) => {
         "message": "Register Success",
     });
     next();
-})
+});
+
+
+// 사용자 지역에 맞는 목록 띄우기
+router.post('/product', async (req, res, next) => {
+    console.log(req.body);
+    try {
+        //클라이언트쪽에서는 사용자 고유번호, 지역정보
+        let product = await Product.findAll({
+            where: {
+                town: req.body.town,
+            }
+        });
+
+        console.log(product);
+
+        res.json({
+            "products": product,
+            "code": 200,
+        });
+
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+});
 
 
 module.exports = router;

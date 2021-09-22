@@ -12,10 +12,6 @@ module.exports = class Product extends Sequelize.Model {
                 type: Sequelize.STRING(45),
                 allowNull: false,
             },
-            stock: {
-                type: Sequelize.STRING(10),
-                allowNull: false,
-            },
             price: {
                 type: Sequelize.STRING(20),
                 allowNull: false,
@@ -49,7 +45,15 @@ module.exports = class Product extends Sequelize.Model {
                 allowNull: false,
                 defaultValue: Sequelize.NOW,
                 primaryKey: true,
-            }
+            },
+            town: {
+                type: Sequelize.STRING(45),
+                allowNull: false,
+            },
+            location: {
+                type: Sequelize.STRING(100),
+                allowNull: false,
+            },
         }, {
             sequelize,
             timestamps: false,
