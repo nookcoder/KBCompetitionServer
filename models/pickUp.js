@@ -51,7 +51,7 @@ module.exports = class PickUp extends Sequelize.Model {
                 type: Sequelize.STRING(45),
                 allowNull: false
             },
-            registerTime: {
+            pickregisterTime: {
                 type: Sequelize.DATE,
                 allowNull: false,
                 defaultValue: Sequelize.NOW,
@@ -65,8 +65,8 @@ module.exports = class PickUp extends Sequelize.Model {
             sequelize,
             timestamps: false,
             underscored: false,
-            modelName: 'Merchant',
-            tableName: 'merchants',
+            modelName: 'PickUp',
+            tableName: 'pickUp',
             paranoid: false,
             charset: 'utf8',
             collate: 'utf8_bin'

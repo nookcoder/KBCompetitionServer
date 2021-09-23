@@ -32,6 +32,14 @@ module.exports = class Personal extends Sequelize.Model {
                 type: Sequelize.BOOLEAN,
                 allowNull: false,
             },
+            townPosition1: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
+            townPosition2: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            }
         }, {
             sequelize,
             timestamps: false,

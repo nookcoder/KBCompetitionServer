@@ -20,6 +20,8 @@ router.post('/', async (req, res, next) => {
             firstLocation: "",
             secondLocation: "",
             isRegister: false,
+            townPosition1: "",
+            townPosition2: ""
         })
     }
 
@@ -43,7 +45,9 @@ router.post('/register', (req, res, next) => {
         userPhoneNumber: req.body.userPhoneNumber,
         firstLocation: req.body.firstLocation,
         secondLocation: req.body.secondLocation,
-        isRegister: true
+        isRegister: true,
+        townPosition1: req.body.townPosition1,
+        townPosition2: req.body.townPosition2
     }, {
         where: {
             userId: req.body.userId,
@@ -56,7 +60,6 @@ router.post('/register', (req, res, next) => {
     });
     next();
 });
-
 
 // 사용자 지역에 맞는 목록 띄우기
 router.post('/product', async (req, res, next) => {
@@ -82,5 +85,21 @@ router.post('/product', async (req, res, next) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        const personal = await Personal.findOne({
+            where: {
+                userId: req.params.userId,
+            }
+        });
+
+        req.json({
+            "personal": personal
+        });
+    } catch (err) {
+        console.log(err);
+    }
+
+});
 
 module.exports = router;

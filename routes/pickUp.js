@@ -8,46 +8,50 @@ const router = express.Router();
 router.post('/', async (req, res, next) => {
     console.log(req.body);
 
-    let merchant = await Merchant.findOne({
-        attributes: ["storeName"],
-        where: {
-            id: req.body.merchantId,
-        }
-    });
+    try {
+        let merchant = await Merchant.findOne({
+            where: {
+                id: req.body.merchantId,
+            }
+        });
 
-    let personal = await Personal.findOne({
-        attributes: ["nickName"],
-        where: {
-            userId: req.body.personalId,
-        }
-    });
+        let personal = await Personal.findOne({
+            where: {
+                userId: req.body.personalId,
+            }
+        });
 
-    let product = await Product.destory({
-        where: {
-            registerTime: req.body.registerTime,
-        }
-    })
+        await Product.destroy({
+            where: {
+                registerTime: req.body.registerTime,
+            }
+        });
 
-    let pickUpItem = PickUp.create({
-        merchantId: req.body.merchantId,
-        merchantName: merchant.storeName,
-        personalId: req.body.personalId,
-        personalName: personal.nickName,
-        pickUpYear: req.body.pickUpYear,
-        pickUpMonth: req.body.pickUpMonth,
-        pickUpDay: req.body.pickUpDay,
-        pickUpNoon: req.body.pickUpNoon,
-        pickUpHour: req.body.pickUpHour,
-        pickUpMinute: req.body.pickUpMinute,
-        location: req.body.location,
-        productName: req.body.productName,
-        isPickUp: false,
-    });
+        let pickUpItem = await PickUp.create({
+            merchantId: req.body.merchantId,
+            merchantName: merchant.storeName,
+            personalId: req.body.personalId,
+            personalName: personal.nickName,
+            pickUpYear: req.body.pickUpYear,
+            pickUpMonth: req.body.pickUpMonth,
+            pickUpDay: req.body.pickUpDay,
+            pickUpNoon: req.body.pickUpNoon,
+            pickUpHour: req.body.pickUpHour,
+            pickUpMinute: req.body.pickUpMinute,
+            location: req.body.location,
+            productName: req.body.productName,
+            isPickUp: false,
+        });
 
-    console.log("생성 완료 : " + pickUpItem);
-    res.json({
-        "isRegister": "ok",
-    })
+        console.log("생성 완료 : " + pickUpItem);
+        res.json({
+            "isRegister": "ok",
+        });
+
+    } catch (err) {
+        console.log(err);
+    }
+
 
     next();
 });

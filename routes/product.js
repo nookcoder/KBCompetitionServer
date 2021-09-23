@@ -14,7 +14,7 @@ const upload = multer({
         },
         filename: (req, file, done) => {
             const ext = path.extname(file.originalname);
-            done(null, path.basename(file.originalname, ext) + ext);
+            done(null, path.basename(file.originalname, ext) + req.body.registerTime + ext);
         },
     }),
     limits: { fileSize: 100 * 1024 * 1024 },
@@ -23,13 +23,11 @@ const upload = multer({
 router.post('/img', upload.single('uploads'), (req, res) => {
     console.log("이미지 업로드");
     console.log(req.file);
-    res.json({
-        "code": 200,
-    });
 });
 
 // 폼데이터 속성명이 img 이거나 폼태크
 router.post('/register', async (req, res, next) => {
+    console.log(req.body);
     try {
         const merchant = await Merchant.findOne({
             where: {
@@ -52,6 +50,8 @@ router.post('/register', async (req, res, next) => {
             location: merchant.location
         });
 
+        res.json(product);
+        console.log(product);
     } catch (err) {
         console.log(err);
     }
