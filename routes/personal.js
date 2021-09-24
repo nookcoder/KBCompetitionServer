@@ -30,7 +30,6 @@ router.post('/', async (req, res, next) => {
         console.log("반가워요 개인 유저님");
     }
 
-    console.log(personal.isRegister);
     res.json({
         isRegister: personal.isRegister,
     });
@@ -72,8 +71,6 @@ router.post('/product', async (req, res, next) => {
             }
         });
 
-        console.log(product);
-
         res.json({
             "products": product,
             "code": 200,
@@ -87,19 +84,17 @@ router.post('/product', async (req, res, next) => {
 
 router.get('/:id', async (req, res) => {
     try {
+        console.log(req.params);
         const personal = await Personal.findOne({
             where: {
-                userId: req.params.userId,
+                userId: req.params.id,
             }
         });
-
-        req.json({
-            "personal": personal
-        });
+        res.send(personal);
+        console.log("통신성공");
     } catch (err) {
         console.log(err);
     }
-
 });
 
 module.exports = router;

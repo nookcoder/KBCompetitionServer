@@ -1,5 +1,5 @@
 const express = require('express');
-
+const Op = require('sequelize').Op;
 const { Merchant, Personal, PickUp, Product } = require('../models');
 
 const router = express.Router();
@@ -57,38 +57,47 @@ router.post('/', async (req, res, next) => {
 });
 
 // 픽업 완료 버튼 눌렀을 때 
-router.post('/:id/done', async (req, res, next) => {
-    console.log(req.params);
+router.post('/done/:id', async (req, res, next) => {
     console.log(req.body);
+    console.log("픽업완료");
+    try {
+        let pickItem = await PickUp.update({
+            isPickUp: true,
+        }, {
+            where: {
+                merchantId: req.params.id,
+                personalName: req.body.personalName,
+                productName: req.body.productName,
+                pickregisterTime: req.body.pickregisterTime,
+            }
+        });
+        console.log(pickItem);
+        res.send(pickItem);
 
-    let pickItem = await PickUp.update({
-        isPickUp: true,
-    }, {
-        where: {
-            merchantId: req.params.id,
-            registerTime: req.body.registerTime,
-        }
-    });
-
+    } catch (err) {
+        console.log(err);
+    }
     next();
 });
 
 // 픽업 대기/완료 버튼 눌렀을 때 
 router.get('/:id', async (req, res, next) => {
+    try {
+        let pickUpItem = await PickUp.findAll({
+            where: {
+                [Op.or]: [
+                    { merchantId: req.params.id },
+                    { personalId: req.params.id }
+                ]
+            },
+            raw: true,
+            nest: true,
+        });
 
-    let pickUpItem = await PickUp.findAll({
-        where: {
-            [Op.or]: [
-                { merchantId: req.params.id },
-                { personalId: req.params.id }
-            ]
-        }
-    });
-
-    console.log(pickUpItem);
-    res.json({
-        "pickUpItem": pickUpItem,
-    });
+        res.send(pickUpItem);
+    } catch (err) {
+        console.log(err);
+    }
 
     next();
 });

@@ -33,7 +33,6 @@ router.post('/', async (req, res, next) => {
     if (merchant.isRegister) {
         console.log('반가워요');
     }
-    console.log(merchant.isRegister);
     // 가게 등록 여부 전송 
     res.send(merchant.isRegister);
 
@@ -83,7 +82,6 @@ router.get('/:id/products', async (req, res, next) => {
             }
         });
 
-        console.log(products);
         res.json({
             "products": products,
         });
