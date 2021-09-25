@@ -54,6 +54,10 @@ module.exports = class Product extends Sequelize.Model {
                 type: Sequelize.STRING(100),
                 allowNull: false,
             },
+            storeName: {
+                type: Sequelize.STRING(45),
+                allowNull: false,
+            }
         }, {
             sequelize,
             timestamps: false,

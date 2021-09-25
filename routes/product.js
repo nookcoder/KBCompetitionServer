@@ -42,7 +42,8 @@ router.post('/register', upload.array("uploads", 5), async (req, res, next) => {
             origin: req.body.origin,
             details: req.body.details,
             town: merchant.town2,
-            location: merchant.location
+            location: merchant.location,
+            storeName:merchant.storeName,
         });
     } catch (err) {
         console.log(err);
