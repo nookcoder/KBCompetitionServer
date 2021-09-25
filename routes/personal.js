@@ -68,7 +68,10 @@ router.post('/product', async (req, res, next) => {
         let product = await Product.findAll({
             where: {
                 town: req.body.town,
-            }
+            },
+            order: [
+                ['index', 'DESC'],
+            ]
         });
 
         res.json({
