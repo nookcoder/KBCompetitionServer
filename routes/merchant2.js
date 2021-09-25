@@ -1,4 +1,5 @@
 const express = require('express');
+const sequelize = require('sequelize');
 const { Merchant, Product } = require('../models');
 
 const router = express.Router();
@@ -69,6 +70,20 @@ router.post('/register', async (req, res, next) => {
     next();
 });
 
+router.get('/:id', async (req, res, next) => {
+    try {
+        const merchant = await Merchant.findOne({
+            where: {
+                id: req.params.id,
+            }
+        });
+        res.send(merchant);
+        next();
+    } catch (err) {
+        console.log(err);
+    }
+})
+
 router.get('/:id/products', async (req, res, next) => {
     console.log(req.params);
 
@@ -79,7 +94,10 @@ router.get('/:id/products', async (req, res, next) => {
                 where: {
                     id: req.params.id
                 },
-            }
+            },
+            order: [
+                ['index', 'DESC'],
+            ]
         });
 
         res.json({

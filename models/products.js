@@ -4,6 +4,12 @@ const Sequelize = require('sequelize');
 module.exports = class Product extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
+            index: {
+                type: Sequelize.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+                allowNull: false,
+            },
             name: {
                 type: Sequelize.STRING(45),
                 allowNull: false,
