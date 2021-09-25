@@ -10,24 +10,19 @@ const router = express.Router();
 const upload = multer({
     storage: multer.diskStorage({
         destination: (req, file, done) => {
-            done(null, __dirname + '/uploads/');
+            done(null, __dirname.substring(0, __dirname.length - 6) + 'public/uploads');
         },
         filename: (req, file, done) => {
             const ext = path.extname(file.originalname);
-            done(null, path.basename(file.originalname, ext) + req.body.registerTime + ext);
+            done(null, path.basename(file.originalname, ext) + ext);
         },
     }),
-    limits: { fileSize: 100 * 1024 * 1024 },
+    limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-router.post('/img', upload.single('uploads'), (req, res) => {
-    console.log("이미지 업로드");
-    console.log(req.file);
-});
-
-// 폼데이터 속성명이 img 이거나 폼태크
-router.post('/register', async (req, res, next) => {
+router.post('/register', upload.array("uploads", 5), async (req, res, next) => {
     console.log(req.body);
+    console.log(req.files);
     try {
         const merchant = await Merchant.findOne({
             where: {
@@ -49,8 +44,6 @@ router.post('/register', async (req, res, next) => {
             town: merchant.town2,
             location: merchant.location
         });
-
-        res.json(product);
     } catch (err) {
         console.log(err);
     }

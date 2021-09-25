@@ -5,6 +5,7 @@ const merchantRouter = require('./routes/merchant2');
 const productRouter = require('./routes/product');
 const personalRouter = require('./routes/personal');
 const pickUpRouter = require('./routes/pickUp');
+const imgRouter = require('./routes/img');
 
 const { sequelize, PickUp } = require('./models');
 
@@ -26,7 +27,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/merchant', merchantRouter);
 app.use('/product', productRouter);
 app.use('/personal', personalRouter);
-app.use('/pickUp',pickUpRouter);
+app.use('/pickUp', pickUpRouter);
+app.use('/img', imgRouter);
 
 app.get('/daum', (req, res, next) => {
     res.writeHead(200, { 'Content-Type': 'text/html' });
